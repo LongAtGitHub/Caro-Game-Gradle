@@ -13,6 +13,7 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -20,7 +21,7 @@ dependencies {
     testImplementation(libs.junit.jupiter)
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
+    implementation("com.github.mac-comp127:kilt-graphics:1.6")
     // This dependency is used by the application.
     implementation(libs.guava)
 }
