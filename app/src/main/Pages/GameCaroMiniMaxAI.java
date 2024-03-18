@@ -31,23 +31,13 @@ public class GameCaroMiniMaxAI extends GameCaro{
 
     @Override
     protected void gameProgress(CanvasWindow canva) {
-        // first time bot playing
-        // if (!humanTurn)  {
-        //     botPlay();
-        //     humanTurn = !humanTurn;
-        // } 
         canva.onClick((event -> {
             // end game
             changeGameStatusUIVal();
             if (gameState == 1 || gameState== -1 || fillUpNum >= numGridM*numGridN) { return;}
             if (humanTurn) { 
                 Boolean hasHumanCompletedTurn = humanPlay(event); 
-                for (int t=0; t<1000; t++)
-                {
-                    if (hasHumanCompletedTurn) { break;}
-                    else hasHumanCompletedTurn = humanPlay(event);
-                }
-                humanTurn = !humanTurn;
+                if (hasHumanCompletedTurn) humanTurn = !humanTurn;
             }
 
             canva.draw();
@@ -86,7 +76,10 @@ public class GameCaroMiniMaxAI extends GameCaro{
      */
     protected Boolean humanPlay(MouseButtonEvent event) {
         List<Integer> indices = translatePointToGrid(event.getPosition());
-        if (indices == null) { return false;}
+        if (indices == null) { 
+            System.out.println("False move");
+            return false; 
+            }
         
         Integer i = indices.get(0); Integer j = indices.get(1);
         Boolean markCharacterSuccess = gridArray[i][j].setCharValue(currentTurn);
