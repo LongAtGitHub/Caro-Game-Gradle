@@ -16,7 +16,7 @@ public class MiniMaxBot extends Robot {
         super(nrow, ncol, markPlay);
         if (markPlay=='X') isMaximizing= true;
         else isMaximizing=false;
-        CheckWin winChecker = new CheckWin(nrow, ncol, targetCount);
+        // CheckWin winChecker = new CheckWin(nrow, ncol, targetCount);
     }
 
     

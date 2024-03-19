@@ -4,12 +4,112 @@
 
  import org.junit.jupiter.api.Test;
  import static org.junit.jupiter.api.Assertions.*;
+ import Mini_Components.BoardData;
  
  
  
-class mytest {
-    @Test void hello() {
-        assertEquals("hello", "hello");  
+ public class mytest {
+    private static BoardData myBoardData;
+
+    @Test
+    void boardData() {
+        BoardData board = new BoardData(10, 10, 5);
+        Boolean firstMark = board.markPosition('X', 1, 1);
+        assertEquals(true, firstMark);
+        assertEquals(1,board.getFillCount());
+
+        Boolean mark = board.markPosition('O', 1, 1);
+        assertEquals(false, mark);
+        assertEquals(1, board.getFillCount());
+        assertEquals(1, board.getRecentMoveI());
+        assertEquals(1, board.getRecentMoveJ());
+
+        mark = board.markPosition('O', 11, 1);
+        assertEquals(false, mark);
+        assertEquals(1, board.getFillCount());
+        assertEquals(1, board.getRecentMoveI());
+        assertEquals(1, board.getRecentMoveJ());
+
+        mark = board.markPosition('O', 2, 1);
+        assertEquals(true, mark);
+        assertEquals(2, board.getFillCount());
+        assertEquals(2, board.getRecentMoveI());
+        assertEquals(1, board.getRecentMoveJ());
+
+        assertEquals(null, board.winStatus());
+        assertEquals('O', board.getRecentMark());
     }
- }
+
+    @Test
+    void testWin() {
+        // Create a new board
+        BoardData board = new BoardData(10, 10, 5);
+
+        // Mark positions for X to win
+        board.markPosition('X', 1, 1);
+        board.markPosition('X', 2, 1);
+        board.markPosition('X', 3, 1);
+        board.markPosition('X', 4, 1);
+        boolean winResult = board.markPosition('X', 5, 1);
+
+        // Check if X wins
+        assertEquals(true, winResult);
+        assertEquals(1, board.winStatus());
+
+        // Reset the board for O to win
+        board = new BoardData(10, 10, 5);
+
+        // Mark positions for O to win
+        board.markPosition('O', 1, 1);
+        board.markPosition('O', 1, 2);
+        board.markPosition('O', 1, 3);
+        board.markPosition('O', 1, 4);
+        winResult = board.markPosition('O', 1, 5);
+
+        // Check if O wins
+        assertEquals(true, winResult);
+        assertEquals(-1, board.winStatus());
+
+        // Reset the board for a tie game
+        board = new BoardData(10, 10, 5);
+
+        // Fill the board without any winning condition
+        board.markPosition('X', 1, 1);
+        board.markPosition('O', 1, 2);
+        board.markPosition('X', 1, 3);
+        board.markPosition('O', 1, 4);
+        board.markPosition('X', 1, 5);
+        board.markPosition('O', 2, 1);
+        board.markPosition('X', 2, 2);
+        board.markPosition('O', 2, 3);
+        board.markPosition('X', 2, 4);
+        board.markPosition('O', 2, 5);
+        board.markPosition('X', 3, 1);
+        board.markPosition('O', 3, 2);
+        board.markPosition('X', 3, 3);
+        board.markPosition('O', 3, 4);
+        board.markPosition('X', 3, 5);
+        board.markPosition('O', 4, 1);
+        board.markPosition('X', 4, 2);
+        board.markPosition('O', 4, 3);
+        board.markPosition('X', 4, 4);
+        board.markPosition('O', 4, 5);
+        winResult = board.markPosition('X', 5, 1);
+        board.printCharArray();
+        assertEquals(true, winResult);
+        assertEquals(1, board.winStatus());
+
+    }
+    @Test
+    void checkTie() {
+        BoardData board = new BoardData(3, 3, 3);
+        for ( int i=0; i< 3; i++) {
+            for (int j=0; j<3; j++) {
+                board.markPosition('X', i, j);
+         
+           }
+        }
+        assertEquals(0, board.winStatus());
+    }
+}
  

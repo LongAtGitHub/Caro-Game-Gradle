@@ -25,15 +25,14 @@ public class GameCaro {
     protected double boardStartX = WIDTH * 1/20;
     protected double boardStartY = HEIGHT * 2/20;
     protected Grid[][] gridArray;
-    protected Character[][] charArray; // support array
+    // protected Character[][] charArray; // support array
 
     protected double boardHeight;
         
     protected double gridSize;
 
     protected Character currentTurn=  'X'; // current turn mark
-    protected CheckWin winChecker; 
-    protected int gameState = 0; protected int fillUpNum=0;
+    protected Integer gameState = null; 
 
     protected Image imageTurn;
     protected GraphicsText gameStatus;
@@ -46,7 +45,6 @@ public class GameCaro {
             return;
         }
 
-        // init
         this.numGridM = numGridM;
         this.numGridN = numGridN;
         this.boardHeight = HEIGHT * 15/20;
@@ -55,11 +53,9 @@ public class GameCaro {
         
 
         // init checkwin object and support array to checkwin
-        charArray = new Character[numGridM][numGridN];
         Integer targetCount = 3;
         if (numGridM>3 && numGridN>3)  targetCount = 5;
         System.out.println(targetCount);
-        winChecker = new CheckWin(numGridM,numGridN,targetCount);
 
         boardData = new BoardData(numGridM, numGridN, targetCount);
     }
@@ -115,7 +111,6 @@ public class GameCaro {
         for (int i=0; i< numGridM; i++) {
             for (int j=0; j< numGridN; j++) {
                 Grid grid= new Grid(gridSize, locationX, locationY, i, j);
-                charArray[i][j] = null;
                 gridArray[i][j] = grid;
                 getInitGameBoard.add(gridArray[i][j]);
                 locationX+= gridSize;
@@ -160,9 +155,10 @@ public class GameCaro {
     // Game progress logics
     protected void gameProgress(CanvasWindow canva) {
         canva.onClick((event -> {
-            if (gameState == 1 || gameState== -1 || fillUpNum >= numGridM*numGridN) {
-                return;
-            }
+            if (gameState!=null && 
+                (gameState == 1 || gameState== -1 || gameState==0)
+            )  return;
+            
             List<Integer> indices = translatePointToGrid(event.getPosition());
             if (indices == null) { return; }
             
@@ -170,10 +166,9 @@ public class GameCaro {
             Boolean markCharacterSuccess = gridArray[i][j].setCharValue(currentTurn);
             if (markCharacterSuccess) 
             { 
-                charArray[i][j] = currentTurn;
+                boardData.markPosition(currentTurn, i, j);
                 setXOImagePath();
-                fillUpNum+=1;
-                gameState = winChecker.output(charArray, currentTurn, i, j);
+                gameState = boardData.winStatus();
                 setNextTurnChar();
             }
             changeGameStatusUIVal();
@@ -182,7 +177,10 @@ public class GameCaro {
 
     // Change the gameStatus graphic text text content
     protected void changeGameStatusUIVal() {
-        if (gameState == 1) {
+        if (gameState == null) {
+            gameStatus.setText("Ongoing");
+        }
+        else if (gameState == 1) {
             this.gameStatus.setText("X wins");
             this.gameStatus.setFillColor(new Color(255,0,0));
         } 
@@ -191,12 +189,11 @@ public class GameCaro {
             this.gameStatus.setFillColor(new Color(255,0,0));
         }
 
-        else if (gameState==0 && fillUpNum== numGridM*numGridN) {
+        else if (gameState==0) {
             this.gameStatus.setText("Game Ties");
             this.gameStatus.setFillColor(new Color(0,255,0));
         }
-        else 
-            gameStatus.setText("Ongoing");
+            
     }
 
     protected void setXOImagePath() {
@@ -205,14 +202,14 @@ public class GameCaro {
         else {imageTurn.setImagePath("img/O.png");}
     }
 
-    protected void printCharArray() {
-        for (int i = 0; i < numGridM; i++) {
-            for (int j = 0; j < numGridN; j++) {
-                System.out.print(charArray[i][j] + " ");
-            }
-            System.out.println(); // Move to the next line after printing each row
-        }
-    }
+    // protected void printCharArray() {
+    //     for (int i = 0; i < numGridM; i++) {
+    //         for (int j = 0; j < numGridN; j++) {
+    //             System.out.print(charArray[i][j] + " ");
+    //         }
+    //         System.out.println(); // Move to the next line after printing each row
+    //     }
+    // }
 
     // display the complete game
     public void gameComplete() {  

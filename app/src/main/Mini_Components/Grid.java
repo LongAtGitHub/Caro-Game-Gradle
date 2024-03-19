@@ -33,6 +33,7 @@ public class Grid extends GraphicsGroup {
         this.gridSize = size;
 
         this.imageMargin  = size/10;
+        this.value = 'N';
     }
 
     public double getSquareSize() {
@@ -44,9 +45,10 @@ public class Grid extends GraphicsGroup {
     }
 
     public Boolean setCharValue(Character c) {
-        if (this.value != null) {return false;}
-        else if (c!='X' && c!='O') {return false;}
-        else if (c=='X') {
+        // if (this.value != null) {return false;}
+        if (this.value != 'N') { return false;}
+        System.out.println(true);
+        if (c=='X') {
             this.value = 'X';
             this.image = new Image(imageMargin, imageMargin, "img/X.png");  
         }

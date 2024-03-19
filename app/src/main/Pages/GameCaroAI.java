@@ -17,7 +17,7 @@ public class GameCaroAI extends GameCaro{
 
     private Boolean humanTurn;
     private Boolean humanPlayFirst;
-    private Character robotMark;
+
 
     public GameCaroAI(int numGridM, int numGridN, Boolean humanPlayFirst) {
         super(numGridM, numGridN);
@@ -31,11 +31,15 @@ public class GameCaroAI extends GameCaro{
     @Override
     protected void gameProgress(CanvasWindow canva) {
         canva.onClick((event -> {
+            System.out.println("human turn:" + humanTurn);
             // end game
             changeGameStatusUIVal();
-            if (gameState == 1 || gameState== -1 || fillUpNum >= numGridM*numGridN) { return;}
+            if (gameState!=null && 
+                (gameState == 1 || gameState== -1 || gameState==0)
+            )  return;
             if (humanTurn) { 
                 Boolean hasHumanCompletedTurn = humanPlay(event); 
+                System.out.println();
                 if (hasHumanCompletedTurn) humanTurn = !humanTurn;
             }
 
@@ -43,11 +47,14 @@ public class GameCaroAI extends GameCaro{
             delay(500);
 
             changeGameStatusUIVal();
-            if (gameState == 1 || gameState== -1 || fillUpNum >= numGridM*numGridN) { return;}
+            if (gameState!=null && 
+                (gameState == 1 || gameState== -1 || gameState==0)
+            )  return;
             if (!humanTurn)  {
                 botPlay();
                 humanTurn = !humanTurn;
             } 
+            canva.draw();
         }));   
     }
 
@@ -80,11 +87,10 @@ public class GameCaroAI extends GameCaro{
         Integer i = indices.get(0); Integer j = indices.get(1);
         Boolean markCharacterSuccess = gridArray[i][j].setCharValue(currentTurn);
         if (markCharacterSuccess) 
-        { 
-            charArray[i][j] = currentTurn;
+        {
+            boardData.markPosition(currentTurn, i, j);
             setXOImagePath();
-            fillUpNum+=1;
-            gameState = winChecker.output(charArray, currentTurn, i, j);
+            gameState = boardData.winStatus();
             setNextTurnChar();
             return true;
         }
@@ -96,15 +102,15 @@ public class GameCaroAI extends GameCaro{
      * @return true if bot plays a legal move
      */
     protected Boolean botPlay() {
-        int[] botOuput = randoBot.output(charArray);
+        int[] botOuput = randoBot.output(boardData.getArrayData());
         int i = botOuput[0]; int j = botOuput[1];
         Boolean markCharacterSuccess = gridArray[i][j].setCharValue(currentTurn);
         if (markCharacterSuccess) 
         { 
-            charArray[i][j] = currentTurn;
+            Boolean play = boardData.markPosition(currentTurn, i, j);
+            System.out.println(play);
             setXOImagePath();
-            fillUpNum+=1;
-            gameState = winChecker.output(charArray, currentTurn, i, j);
+            gameState = boardData.winStatus();
             setNextTurnChar();
             return true;
         }

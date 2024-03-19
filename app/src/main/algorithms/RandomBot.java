@@ -20,7 +20,7 @@ public class RandomBot extends Robot {
         setPosssibleMove(charArr);
         Random random = new Random();
         int randomIndex = random.nextInt(possibleMove.size());
-        int[] randomElement = possibleMove.get(randomIndex);
+        int[] randomElement = this.possibleMove.get(randomIndex);
         // int indexI = randomElement[0];
         // int indexJ = randomElement[1];
         // return new int[]{indexI, indexJ};
@@ -31,7 +31,7 @@ public class RandomBot extends Robot {
         possibleMove = new ArrayList<int[]>();
         for (int i = 0; i < nrow; i++) {
             for (int j = 0; j < ncol; j++) {
-                if (charArr[i][j] == null ){
+                if (charArr[i][j] == 'N' ){
                     int[] indices = new int[] {i,j};
                     possibleMove.add(indices);
                 } 
