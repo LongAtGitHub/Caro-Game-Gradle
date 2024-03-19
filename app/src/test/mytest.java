@@ -11,7 +11,5 @@ class mytest {
     @Test void hello() {
         assertEquals("hello", "hello");  
     }
- 
-     
  }
  

@@ -113,8 +113,6 @@ public class GameCaroMiniMaxAI extends GameCaro{
             return true;
         }
         return false;
-    }
-
-    
+    }  
 }
 

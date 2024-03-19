@@ -36,12 +36,7 @@ public class GameCaroAI extends GameCaro{
             if (gameState == 1 || gameState== -1 || fillUpNum >= numGridM*numGridN) { return;}
             if (humanTurn) { 
                 Boolean hasHumanCompletedTurn = humanPlay(event); 
-                for (int t=0; t<1000; t++)
-                {
-                    if (hasHumanCompletedTurn) { break;}
-                    else hasHumanCompletedTurn = humanPlay(event);
-                }
-                humanTurn = !humanTurn;
+                if (hasHumanCompletedTurn) humanTurn = !humanTurn;
             }
 
             canva.draw();

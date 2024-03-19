@@ -6,8 +6,7 @@ import edu.macalester.graphics.GraphicsText;
 import edu.macalester.graphics.Image;
 import edu.macalester.graphics.Point;
 import edu.macalester.graphics.ui.*;
-import Mini_Components.Grid;
-
+import Mini_Components.*;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,6 +14,8 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 import algorithms.*;
+
+
 public class GameCaro {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     protected int WIDTH = (int) screenSize.getWidth();
@@ -37,6 +38,7 @@ public class GameCaro {
     protected Image imageTurn;
     protected GraphicsText gameStatus;
     protected CanvasWindow canva;
+    protected BoardData boardData;
 
     public GameCaro(int numGridM, int numGridN) {
         if (numGridM<3 || numGridN<3) { 
@@ -44,10 +46,11 @@ public class GameCaro {
             return;
         }
 
+        // init
         this.numGridM = numGridM;
         this.numGridN = numGridN;
         this.boardHeight = HEIGHT * 15/20;
-        this.gridSize = WIDTH/ numGridN *0.8;
+        this.gridSize = Math.min(WIDTH / numGridN, this.boardHeight / numGridM);
         gridArray = new Grid[this.numGridM][this.numGridN];
         
 
@@ -57,21 +60,11 @@ public class GameCaro {
         if (numGridM>3 && numGridN>3)  targetCount = 5;
         System.out.println(targetCount);
         winChecker = new CheckWin(numGridM,numGridN,targetCount);
+
+        boardData = new BoardData(numGridM, numGridN, targetCount);
     }
 
-    // default constructor
-    public GameCaro() {
-        this.numGridM = 12;
-        this.numGridN = 20;
-        this.boardHeight = HEIGHT * 15/20;
-        this.gridSize = WIDTH/ numGridN *0.8;
-        gridArray = new Grid[this.numGridM][this.numGridN];
-        charArray = new Character[numGridM][numGridN];
-        Integer targetCount = 3;
-        if (numGridM>3 && numGridN>3)  targetCount = 5;
-        System.out.println(targetCount);
-        winChecker = new CheckWin(numGridM,numGridN,targetCount);
-    }
+  
 
     protected GraphicsGroup UI() {
         double unitX = WIDTH/ 20;
@@ -232,7 +225,11 @@ public class GameCaro {
     }
 
     public static void main(String[] args) {
-        GameCaro game = new GameCaro(12, 20);
+    
+        GameCaro game = new GameCaro(15, 20);
+        System.out.println(game.WIDTH);
+        System.out.println(game.HEIGHT);
+        System.out.println(game.gridSize);
         game.gameComplete();
     }
 }
